@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "###",
+        "# #",
+        "CCC"
+    ],
+    "key": {
+        "#": {
+            "item": "minecraft:glass"
+        },
+        "C": {
+            "item": "minecraft:crying_obsidian"
+        }
+    },
+    "result": {
+        "item": "rfmagnet:magnet_jar",
+        "count": 1
+    }
+}
