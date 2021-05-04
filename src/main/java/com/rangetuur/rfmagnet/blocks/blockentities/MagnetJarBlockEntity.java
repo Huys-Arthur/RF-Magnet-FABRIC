@@ -3,6 +3,7 @@ package com.rangetuur.rfmagnet.blocks.blockentities;
 import com.rangetuur.rfmagnet.ImplementedInventory;
 import com.rangetuur.rfmagnet.items.MagnetItem;
 import com.rangetuur.rfmagnet.registry.ModBlockEntityTypes;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -16,6 +17,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -32,7 +34,7 @@ import team.reborn.energy.Energy;
 
 import java.util.List;
 
-public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInventory, SidedInventory, Tickable {
+public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInventory, SidedInventory, Tickable, BlockEntityClientSerializable {
 
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
@@ -50,6 +52,17 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
     public CompoundTag toTag(CompoundTag tag) {
         Inventories.toTag(tag,items);
         return super.toTag(tag);
+    }
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        Inventories.fromTag(tag,items);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        Inventories.toTag(tag,items);
+        return tag;
     }
 
     @Override
@@ -85,7 +98,6 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
         if (getStack(1).isEmpty()) {
             putItemAroundBlockInInventory();
         }
-        System.out.println("BlockEntity: " + getStack(0));
     }
 
     private void attractItemsAroundBlock(BlockPos pos, ItemStack stack) {

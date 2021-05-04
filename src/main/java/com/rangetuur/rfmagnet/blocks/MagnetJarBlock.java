@@ -51,7 +51,6 @@ public class MagnetJarBlock extends Block implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) return ActionResult.SUCCESS;
         Inventory blockEntity = (Inventory) world.getBlockEntity(pos);
 
         if (!player.getStackInHand(hand).isEmpty() && player.getStackInHand(hand).getItem() instanceof MagnetItem) {

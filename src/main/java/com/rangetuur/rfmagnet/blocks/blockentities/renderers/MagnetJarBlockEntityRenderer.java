@@ -20,12 +20,10 @@ public class MagnetJarBlockEntityRenderer extends BlockEntityRenderer<MagnetJarB
 
     @Override
     public void render(MagnetJarBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        System.out.println("Render: " + entity.getItems().get(0));
         if (entity.getStack(0)!=ItemStack.EMPTY){
             matrices.push();
 
-            double offset = Math.sin((entity.getWorld().getTime() + tickDelta) / 8.0) / 4.0;
-            matrices.translate(0.5, 0.25 + offset, 0.5);
+            matrices.translate(0.5, 0.25, 0.5);
             matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.getWorld().getTime() + tickDelta) * 4));
             int lightAbove = WorldRenderer.getLightmapCoordinates(entity.getWorld(), entity.getPos().up());
             MinecraftClient.getInstance().getItemRenderer().renderItem(entity.getStack(0), ModelTransformation.Mode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers);
