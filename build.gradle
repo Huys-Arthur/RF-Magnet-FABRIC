@@ -30,6 +30,12 @@ dependencies {
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
 
+	def rcVersion = 'RebornCore:RebornCore-1.16:+'
+	modApi (rcVersion) {
+		exclude group: "net.fabricmc.fabric-api"
+	}
+	include rcVersion
+
 	modApi 'teamreborn:energy:0.1.1'
 }
 

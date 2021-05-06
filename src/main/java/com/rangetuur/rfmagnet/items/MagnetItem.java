@@ -1,5 +1,6 @@
 package com.rangetuur.rfmagnet.items;
 
+import net.minecraft.advancement.criterion.ItemDurabilityChangedCriterion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -10,13 +11,16 @@ import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import reborncore.common.powerSystem.PowerSystem;
+import reborncore.common.util.ItemDurabilityExtensions;
+import reborncore.common.util.ItemUtils;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 
 import java.util.List;
 
-public class MagnetItem extends Item implements EnergyHolder {
+public class MagnetItem extends Item implements EnergyHolder, ItemDurabilityExtensions {
 
     private final int range;
     private final int maxEnergy;
@@ -79,4 +83,20 @@ public class MagnetItem extends Item implements EnergyHolder {
     public int getRange() {
         return range;
     }
+
+    @Override
+    public double getDurability(ItemStack stack) {
+        return 1 - ItemUtils.getPowerForDurabilityBar(stack);
+    }
+
+    @Override
+    public boolean showDurability(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getDurabilityColor(ItemStack stack) {
+        return PowerSystem.getDisplayPower().colour;
+    }
+
 }
