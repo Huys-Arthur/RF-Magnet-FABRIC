@@ -4,39 +4,30 @@ import com.rangetuur.rfmagnet.ImplementedInventory;
 import com.rangetuur.rfmagnet.items.MagnetItem;
 import com.rangetuur.rfmagnet.registry.ModBlockEntityTypes;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.Energy;
+import team.reborn.energy.*;
 
 import java.util.List;
 
-public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInventory, SidedInventory, Tickable, BlockEntityClientSerializable {
+public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInventory, SidedInventory, Tickable, BlockEntityClientSerializable, EnergyStorage {
 
-    private DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
     public MagnetJarBlockEntity() {
         super(ModBlockEntityTypes.MAGNET_JAR);
@@ -93,6 +84,10 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
     @Override
     public void tick() {
         if(getStack(0)!=ItemStack.EMPTY){
+            BlockEntity entityUp = world.getBlockEntity(getPos().up());
+            if (entityUp!=null){
+                Energy.of(entityUp).side(EnergySide.DOWN).into(Energy.of(getStack(0))).move();
+            }
             attractItemsAroundBlock(pos, getStack(0));
         }
         if (getStack(1).isEmpty()) {
@@ -104,13 +99,13 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
         float itemMotion = 0.2F;
         int range = ((MagnetItem) stack.getItem()).getRange();
         double x = pos.getX();
-        double y = pos.getY() + 0.75;
+        double y = pos.getY();
         double z = pos.getZ();
 
-        List<ItemEntity> items = world.getEntitiesByType(EntityType.ITEM, new Box(x-range,y-range,z-range,x+range,y+range,z+range), EntityPredicates.VALID_ENTITY);
+        List<ItemEntity> items = world.getEntitiesByType(EntityType.ITEM, new Box(x-range,y-range,z-range,x+1+range,y+1+range,z+1+range), EntityPredicates.VALID_ENTITY);
         List<ItemEntity> itemsInBlock = world.getEntitiesByType(EntityType.ITEM, new Box(pos.getX(),pos.getY(),pos.getZ(),pos.getX()+1,pos.getY()+1,pos.getZ()+1), EntityPredicates.VALID_ENTITY);
 
-        Vec3d blockVec = new Vec3d(x, y, z);
+        Vec3d blockVec = new Vec3d(x + 0.5F, y, z + 0.5F);
 
         for (ItemEntity item : items) {
             if (!itemsInBlock.contains(item)){
@@ -134,5 +129,36 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
             item.remove();
             markDirty();
         }
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return 0;
+    }
+
+    @Override
+    public void setStored(double amount) {
+
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return 0;
+    }
+
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MICRO;
+    }
+
+    @Override
+    public double getMaxInput(EnergySide side) {
+        return 0;
+    }
+
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        return 0;
     }
 }

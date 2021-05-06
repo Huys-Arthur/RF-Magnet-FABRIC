@@ -12,8 +12,8 @@ import team.reborn.energy.EnergyTier;
 public class ModItems {
 
     //Items
-    public static final Item BASIC_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS), 6, 10_000, EnergyTier.MEDIUM);
-    public static final Item ADVANCED_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS), 8,60_000, EnergyTier.HIGH);
+    public static final Item BASIC_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1), 6, 10_000, EnergyTier.MICRO);
+    public static final Item ADVANCED_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS).fireproof().maxCount(1), 8,60_000, EnergyTier.MICRO);
 
     //Block Items
     public static final BlockItem MAGNET_JAR = new BlockItem(ModBlocks.MAGNET_JAR, new Item.Settings().group(ItemGroup.TRANSPORTATION));
