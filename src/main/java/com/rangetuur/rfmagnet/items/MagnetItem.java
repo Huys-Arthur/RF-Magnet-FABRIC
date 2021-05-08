@@ -2,10 +2,12 @@ package com.rangetuur.rfmagnet.items;
 
 import com.rangetuur.rfmagnet.RFMagnetConfig;
 import net.minecraft.advancement.criterion.ItemDurabilityChangedCriterion;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -47,36 +49,30 @@ public class MagnetItem extends Item implements EnergyHolder, ItemDurabilityExte
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
         super.inventoryTick(stack, world, entity, slot, selected);
-
-        boolean magnetActive = false;
-        for (ItemStack s: entity.getItemsHand()){
-            if (s.getItem() instanceof MagnetItem || RFMagnetConfig.magnet_always_works) {
-                magnetActive = true;
-            }
+        if (Energy.of(stack).getEnergy()>maxEnergy){
+            Energy.of(stack).set(maxEnergy);
         }
 
-        if(magnetActive){
-            attractItemsToPlayer(entity, stack);
+        for (ItemStack s: entity.getItemsHand()){
+            if (s.getItem() instanceof MagnetItem || RFMagnetConfig.magnet_always_works) {
+                attractItemsToPlayer(entity, s);
+            }
         }
     }
 
     private void attractItemsToPlayer(Entity entity, ItemStack stack) {
-        float itemMotion = 0.2F;
         double x = entity.getX();
         double y = entity.getY() + 0.75;
         double z = entity.getZ();
 
         List<ItemEntity> items = entity.getEntityWorld().getEntitiesByType(EntityType.ITEM, new Box(x-range,y-range,z-range,x+range,y+range,z+range), EntityPredicates.VALID_ENTITY);
 
-        Vec3d playerVec = new Vec3d(x, y, z);
-
         for (ItemEntity item : items) {
             int energyForItem = item.getStack().getCount();
-            if(Energy.of(stack).getEnergy()>energyForItem) {
-                Vec3d itemEntityVec = new Vec3d(item.getX(), item.getY(), item.getZ());
-                Vec3d finalVec = playerVec.subtract(itemEntityVec).multiply(itemMotion);
-                item.move(MovementType.PLAYER, finalVec);
-                Energy.of(stack).extract(energyForItem);
+            if(Energy.of(stack).getEnergy()>=energyForItem) {
+                item.setPickupDelay(0);
+                item.method_30634(x, y, z);
+                Energy.of(stack).set(Energy.of(stack).getEnergy()-energyForItem);
             }
         }
     }

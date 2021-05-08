@@ -105,7 +105,6 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
     }
 
     private void attractItemsAroundBlock(BlockPos pos, ItemStack stack) {
-        float itemMotion = 0.2F;
         int range = ((MagnetItem) stack.getItem()).getRange();
         double x = pos.getX();
         double y = pos.getY();
@@ -114,15 +113,11 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
         List<ItemEntity> items = world.getEntitiesByType(EntityType.ITEM, new Box(x-range,y-range,z-range,x+1+range,y+1+range,z+1+range), EntityPredicates.VALID_ENTITY);
         List<ItemEntity> itemsInBlock = world.getEntitiesByType(EntityType.ITEM, new Box(pos.getX(),pos.getY(),pos.getZ(),pos.getX()+1,pos.getY()+1,pos.getZ()+1), EntityPredicates.VALID_ENTITY);
 
-        Vec3d blockVec = new Vec3d(x + 0.5F, y, z + 0.5F);
-
         for (ItemEntity item : items) {
             if (!itemsInBlock.contains(item)){
                 int energyForItem = item.getStack().getCount();
-                if(Energy.of(stack).getEnergy()>energyForItem) {
-                    Vec3d itemEntityVec = new Vec3d(item.getX(), item.getY(), item.getZ());
-                    Vec3d finalVec = blockVec.subtract(itemEntityVec).multiply(itemMotion);
-                    item.move(MovementType.PLAYER, finalVec);
+                if(Energy.of(stack).getEnergy()>=energyForItem) {
+                    item.method_30634(x, y, z);
                     Energy.of(stack).extract(energyForItem);
                 }
             }
