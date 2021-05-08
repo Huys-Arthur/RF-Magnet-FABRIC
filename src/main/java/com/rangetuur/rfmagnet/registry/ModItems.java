@@ -1,6 +1,7 @@
 package com.rangetuur.rfmagnet.registry;
 
 import com.rangetuur.rfmagnet.RFMagnet;
+import com.rangetuur.rfmagnet.RFMagnetConfig;
 import com.rangetuur.rfmagnet.items.MagnetItem;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -12,8 +13,8 @@ import team.reborn.energy.EnergyTier;
 public class ModItems {
 
     //Items
-    public static final Item BASIC_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1), 6, 10_000, EnergyTier.MICRO);
-    public static final Item ADVANCED_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS).fireproof().maxCount(1), 8,60_000, EnergyTier.MICRO);
+    public static final Item BASIC_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS).maxCount(1), RFMagnetConfig.range_basic_magnet, RFMagnetConfig.capacity_basic_magnet, EnergyTier.MICRO);
+    public static final Item ADVANCED_MAGNET = new MagnetItem(new Item.Settings().group(ItemGroup.TOOLS).fireproof().maxCount(1), RFMagnetConfig.range_advanced_magnet,RFMagnetConfig.capacity_advanced_magnet, EnergyTier.MICRO);
 
     //Block Items
     public static final BlockItem MAGNET_JAR = new BlockItem(ModBlocks.MAGNET_JAR, new Item.Settings().group(ItemGroup.TRANSPORTATION));

@@ -2,6 +2,7 @@ package com.rangetuur.rfmagnet.registry;
 
 import com.google.common.base.Predicates;
 import com.rangetuur.rfmagnet.RFMagnet;
+import com.rangetuur.rfmagnet.RFMagnetConfig;
 import com.rangetuur.rfmagnet.blocks.MagnetJarBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -21,6 +22,8 @@ public class ModBlocks {
     public static final Block MAGNET_JAR = new MagnetJarBlock(FabricBlockSettings.of(Material.GLASS).breakByTool(FabricToolTags.PICKAXES, 3).requiresTool().strength(50.0f, 500.0f).sounds(BlockSoundGroup.GLASS).luminance(10).nonOpaque());
 
     public static void registerBlocks() {
-        Registry.register(Registry.BLOCK, new Identifier(RFMagnet.MOD_ID, "magnet_jar"), MAGNET_JAR);
+        if (!RFMagnetConfig.disable_magnet_jar){
+            Registry.register(Registry.BLOCK, new Identifier(RFMagnet.MOD_ID, "magnet_jar"), MAGNET_JAR);
+        }
     }
 }

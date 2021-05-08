@@ -1,6 +1,8 @@
 package com.rangetuur.rfmagnet.blocks.blockentities;
 
 import com.rangetuur.rfmagnet.ImplementedInventory;
+import com.rangetuur.rfmagnet.RFMagnet;
+import com.rangetuur.rfmagnet.RFMagnetConfig;
 import com.rangetuur.rfmagnet.items.MagnetItem;
 import com.rangetuur.rfmagnet.registry.ModBlockEntityTypes;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -9,6 +11,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.MovementType;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.LavaFluid;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
@@ -85,7 +89,12 @@ public class MagnetJarBlockEntity extends BlockEntity implements ImplementedInve
     public void tick() {
         if(getStack(0)!=ItemStack.EMPTY){
             BlockEntity entityUp = world.getBlockEntity(getPos().up());
-            if (entityUp!=null){
+            if (RFMagnetConfig.generate_energy_magnet_jar){
+                if (world.getFluidState(getPos().up()).getFluid() instanceof LavaFluid){
+                    Energy.of(getStack(0)).insert(RFMagnetConfig.generate_amount_magnet_jar);
+                }
+            }
+            else if (entityUp!=null){
                 Energy.of(entityUp).side(EnergySide.DOWN).into(Energy.of(getStack(0))).move();
             }
             attractItemsAroundBlock(pos, getStack(0));

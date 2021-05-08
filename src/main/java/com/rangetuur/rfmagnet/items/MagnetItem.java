@@ -1,5 +1,6 @@
 package com.rangetuur.rfmagnet.items;
 
+import com.rangetuur.rfmagnet.RFMagnetConfig;
 import net.minecraft.advancement.criterion.ItemDurabilityChangedCriterion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -49,7 +50,7 @@ public class MagnetItem extends Item implements EnergyHolder, ItemDurabilityExte
 
         boolean magnetActive = false;
         for (ItemStack s: entity.getItemsHand()){
-            if (s.getItem() instanceof MagnetItem) {
+            if (s.getItem() instanceof MagnetItem || RFMagnetConfig.magnet_always_works) {
                 magnetActive = true;
             }
         }
